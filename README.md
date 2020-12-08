@@ -1,2 +1,5 @@
 # sharepricealert-api
-API for SharePriceAlert based on DRF, Django Channels and Celery.
+- Returns list of indices, stocks, futures and cryptocurrencies 
+- Adds tickers to user's watchlist 
+- Uses Celery crontabs for alert scheduling 
+- asynchronous websocket for streaming live data
