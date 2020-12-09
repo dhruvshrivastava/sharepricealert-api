@@ -1,8 +1,4 @@
 from django.db import models
-from django.contrib.auth import get_user_model 
-
-User = get_user_model()
-
 
 class Ticker(models.Model):
     ticker_name = models.CharField(max_length=50)
@@ -11,6 +7,8 @@ class Ticker(models.Model):
 
 
 class Watchlist(models.Model):
-    created_by = models.ForeignKey(User, on_delete = models.CASCADE)
+    created_by = models.ForeignKey('auth.User', related_name='watchlist', on_delete=models.CASCADE, null=True)
     tickers = models.ManyToManyField(Ticker)
+    def __str__(self):
+        return self.tickers
 
