@@ -26,4 +26,5 @@ class UserViewSet(viewsets.ModelViewSet):
         username = self.request.data['username']
         email = self.request.data['email']
         password = make_password(self.request.data['password'])
-        serializer.save(username=username, email=email)
+        User.objects.create(username=username, email=email, password=password)
+        serializer.save(username=username, email=email, password=password)
