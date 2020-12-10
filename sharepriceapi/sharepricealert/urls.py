@@ -2,10 +2,10 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter 
 from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token, refresh_jwt_token
-from api.views import WatchlistViewSet, UserViewSet
+from api.views import TickerViewSet, UserViewSet
 
 router = DefaultRouter()
-router.register(r'watchlist', WatchlistViewSet)
+router.register(r'watchlist', TickerViewSet)
 router.register(r'user', UserViewSet)
 
 

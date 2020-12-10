@@ -1,5 +1,5 @@
 from rest_framework import serializers 
-from .models import Watchlist
+from .models import Watchlist, Ticker
 from django.contrib.auth.models import User
 
 class WatchlistSerializer(serializers.ModelSerializer):
@@ -10,13 +10,19 @@ class WatchlistSerializer(serializers.ModelSerializer):
         model = Watchlist 
         fields = [
             'created_by',
-            'tickers',
             
         ]
 class UserSerializer(serializers.ModelSerializer):
+        
+    class Meta:
+        model = User
+        fields = ['id','username','email','password']
+
+class TickerSerializer(serializers.ModelSerializer):
     watchlist = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     
     class Meta:
-        model = User
-        fields = ['id','username','email','password','watchlist']
+        model = Ticker
+        fields = ['ticker_name','watchlist']
+
 
