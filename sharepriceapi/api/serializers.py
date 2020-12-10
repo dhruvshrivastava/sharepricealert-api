@@ -13,13 +13,13 @@ class WatchlistSerializer(serializers.ModelSerializer):
             
         ]
 class UserSerializer(serializers.ModelSerializer):
-        
+       
     class Meta:
         model = User
         fields = ['id','username','email','password']
 
 class TickerSerializer(serializers.ModelSerializer):
-    watchlist = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    watchlist = serializers.ReadOnlyField(source="watchlist.created_by")
     
     class Meta:
         model = Ticker
