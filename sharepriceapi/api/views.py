@@ -5,6 +5,8 @@ from .models import Ticker, Watchlist
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from .permissions import OnlyOwner
+from rest_framework.response import Response
+from rest_framework import status
 
 
 class TickerViewSet(viewsets.ModelViewSet):
@@ -15,6 +17,13 @@ class TickerViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(ticker_name=self.request.data['ticker_name'])
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def perform_destroy(self, instance):
+        instance.delete()
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
