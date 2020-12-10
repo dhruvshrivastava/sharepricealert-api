@@ -1,9 +1,5 @@
-from django.shortcuts import render
-from rest_framework import viewsets, generics, status
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly 
-from rest_framework.views import APIView
-from .permissions import OnlyOwner
-from rest_framework.response import Response
 from .serializers import TickerSerializer, UserSerializer
 from .models import Ticker
 from django.contrib.auth.models import User
