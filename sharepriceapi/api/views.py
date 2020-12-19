@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly 
-from .serializers import TickerSerializer, UserSerializer, WatchlistSerializer
-from .models import Ticker, Watchlist
+from .serializers import TickerSerializer, UserSerializer, WatchlistSerializer, AlertsSerializer, FrequencySerializer, VolumeSerializer, PercentageSerializer
+from .models import Ticker, Watchlist, Alerts, FrequencyAlerts, PercentageAlerts, VolumeAlerts
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from .permissions import OnlyOwner
@@ -43,3 +43,62 @@ class WatchlistViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
+
+class AlertViewset(viewsets.ModelViewSet):
+    queryset = Alerts.objects.all()
+    serializer_class = AlertsSerializer
+    permission_classes = {IsAuthenticatedOrReadOnly, OnlyOwner}
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
+class FrequencyViewset(viewsets.ModelViewSet):
+    queryset = FrequencyAlerts.objects.all()
+    serializer_class = FrequencySerializer
+    permission_classes = {IsAuthenticatedOrReadOnly,}
+
+    def perform_create(self, serializer):
+        serializer.save(ticker=self.request.data['ticker'], interval=self.request.data['interval'])
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def perform_destroy(self, instance):
+        instance.delete()
+
+class VolumeViewset(viewsets.ModelViewSet):
+    queryset = VolumeAlerts.objects.all()
+    serializer_class = VolumeSerializer
+    permission_classes = {IsAuthenticatedOrReadOnly,}
+
+    def perform_create(self, serializer):
+        serializer.save(ticker=self.request.data['ticker'], limit = self.request.data['limit'])
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def perform_destroy(self, instance):
+        instance.delete()
+
+
+class PercentageViewset(viewsets.ModelViewSet):
+    queryset = PercentageAlerts.objects.all()
+    serializer_class = PercentageSerializer
+    permission_classes = {IsAuthenticatedOrReadOnly,}
+
+    def perform_create(self, serializer):
+        serializer.save(ticker=self.request.data['ticker'], limit = self.request.data['limit'])
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def perform_destroy(self, instance):
+        instance.delete()
+
+

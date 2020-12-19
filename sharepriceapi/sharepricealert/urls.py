@@ -2,12 +2,16 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter 
 from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token, refresh_jwt_token
-from api.views import TickerViewSet, UserViewSet, WatchlistViewSet
+from api.views import TickerViewSet, UserViewSet, WatchlistViewSet, AlertViewset, FrequencyViewset, PercentageViewset, VolumeViewset
 
 router = DefaultRouter()
 router.register(r'ticker', TickerViewSet)
 router.register(r'user', UserViewSet)
 router.register(r'watchlist', WatchlistViewSet)
+router.register(r'alerts', AlertViewset)
+router.register(r'frequency', FrequencyViewset)
+router.register(r'volume', VolumeViewset)
+router.register(r'percentage', PercentageViewset)
 
 
 urlpatterns = [

@@ -1,5 +1,5 @@
 from rest_framework import serializers 
-from .models import Watchlist, Ticker
+from .models import Watchlist, Ticker, Alerts, FrequencyAlerts, VolumeAlerts, PercentageAlerts
 from django.contrib.auth.models import User
 
 class WatchlistSerializer(serializers.ModelSerializer):
@@ -24,5 +24,37 @@ class TickerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticker
         fields = ['ticker_name','watchlist']
+
+class AlertsSerializer(serializers.ModelSerializer):
+    created_by = serializers.ReadOnlyField(source="created_by.username", read_only=True)
+
+    class Meta:
+        model = Alerts
+        fields = [
+            'created_by',
+        ]
+
+
+class FrequencySerializer(serializers.ModelSerializer):
+    alert = serializers.ReadOnlyField(source="alert.created_by")
+
+    class Meta:
+        model = FrequencyAlerts
+        fields = ['ticker', 'interval', 'alert']
+
+class VolumeSerializer(serializers.ModelSerializer):
+    alert = serializers.ReadOnlyField(source="alert.created_by")
+
+    class Meta:
+        model = VolumeAlerts
+        fields = ['ticker', 'limit', 'alert']
+
+class PercentageSerializer(serializers.ModelSerializer):
+    alert = serializers.ReadOnlyField(source="alert.created_by")
+
+    class Meta:
+        model = PercentageAlerts
+        fields = ['ticker', 'limit', 'alert']
+
 
 
