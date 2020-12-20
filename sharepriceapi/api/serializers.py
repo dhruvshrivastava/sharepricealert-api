@@ -40,7 +40,7 @@ class FrequencySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FrequencyAlerts
-        fields = ['ticker', 'interval', 'alert']
+        fields = ['ticker', 'interval','time_set', 'alert']
 
 class VolumeSerializer(serializers.ModelSerializer):
     alert = serializers.ReadOnlyField(source="alert.created_by")
