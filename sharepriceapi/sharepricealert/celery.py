@@ -19,11 +19,8 @@ def debug_task(self):
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(60.0, frequency_alerts())
-    sender.add_periodic_task(30.0, test.s('world'), expires=10)
     
-@app.task
-def test(arg):
-  print(arg)
+
     
     
 
