@@ -1,8 +1,15 @@
 from celery import shared_task 
-from .models import FrequencyAlerts, PercentageAlerts, VolumeAlerts
+from .models import FrequencyAlerts, PercentageAlerts, VolumeAlerts, Alerts
 import datetime
 from .quotes import get_ticker_quote
 
+
+@shared_task
+def print_test():
+  freq_alert = FrequencyAlerts.objects.all()
+  for alert in freq_alert:
+    print(alert.alert.created_by)
+  
 
 @shared_task
 def frequency_alerts():
@@ -12,7 +19,7 @@ def frequency_alerts():
       time_after_interval = alert.time_set + datetime.timedelta(minutes=int(alert.interval))
       if now.hour == alert.time_set.hour and now.minute == alert.time_set.minute: 
          data = get_ticker_quote(alert.ticker)
-         print("Frequency Alert: " data)
+         print("Frequency Alert is being sent")
          FrequencyAlerts.objects.filter(pk=alert.id).update(time_set=time_after_interval)
       else:
           print(now)
@@ -23,7 +30,7 @@ def percentage_alerts():
   percentage_alert = PercentageAlerts.objects.all()
   for alert in percentage_alert:
     data = get_ticker_quote(alert.ticker)
-    if data['regularMarketChangePercent'] == alert.limit:
+    if data["regularMarketChangePercent"].item() == alert.limit:
       print("Percentage Alert is being sent")
     else:
       print(alert)
@@ -33,7 +40,7 @@ def volume_alerts():
   volume_alert = VolumeAlerts.objects.all()
   for alert in volume_alert:
     data = get_ticker_quote(alert.ticker)
-    if data['regularMarketVolume'] == alert.limit:
+    if data["regularMarketVolume"].item() == alert.limit:
       print("Volume Alert is being sent ")
     else:
       print(alert)

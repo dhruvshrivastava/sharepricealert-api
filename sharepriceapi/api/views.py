@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly 
-from .serializers import TickerSerializer, UserSerializer, WatchlistSerializer, AlertsSerializer, FrequencySerializer, VolumeSerializer, PercentageSerializer
-from .models import Ticker, Watchlist, Alerts, FrequencyAlerts, PercentageAlerts, VolumeAlerts
+from .serializers import TickerSerializer, UserSerializer, FrequencySerializer, VolumeSerializer, PercentageSerializer
+from .models import Ticker, FrequencyAlerts, PercentageAlerts, VolumeAlerts
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from .permissions import OnlyOwner
@@ -35,22 +35,6 @@ class UserViewSet(viewsets.ModelViewSet):
         password = make_password(self.request.data['password'])
         User.objects.create(username=username, email=email, password=password)
         serializer.save(username=username, email=email, password=password)
-
-class WatchlistViewSet(viewsets.ModelViewSet):
-    queryset = Watchlist.objects.all()
-    serializer_class = WatchlistSerializer
-    permission_classes = {IsAuthenticatedOrReadOnly, OnlyOwner}
-
-    def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
-
-class AlertViewset(viewsets.ModelViewSet):
-    queryset = Alerts.objects.all()
-    serializer_class = AlertsSerializer
-    permission_classes = {IsAuthenticatedOrReadOnly, OnlyOwner}
-
-    def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
 
 class FrequencyViewset(viewsets.ModelViewSet):
     queryset = FrequencyAlerts.objects.all()
