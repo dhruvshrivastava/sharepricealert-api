@@ -1,5 +1,5 @@
 from celery import shared_task 
-from .models import FrequencyAlerts, PercentageAlerts, VolumeAlerts, Alerts
+from .models import FrequencyAlerts, PercentageAlerts, VolumeAlerts
 import datetime
 from .quotes import get_ticker_quote
 
@@ -8,7 +8,7 @@ from .quotes import get_ticker_quote
 def print_test():
   freq_alert = FrequencyAlerts.objects.all()
   for alert in freq_alert:
-    print(alert.alert.created_by)
+    print(alert.alert_of.email)
   
 
 @shared_task
@@ -30,7 +30,8 @@ def percentage_alerts():
   percentage_alert = PercentageAlerts.objects.all()
   for alert in percentage_alert:
     data = get_ticker_quote(alert.ticker)
-    if data["regularMarketChangePercent"].item() == alert.limit:
+    changePercent = "{:.2f}".format(data["regularMarketChangePercent"].item())
+    if changePercent == alert.limit:
       print("Percentage Alert is being sent")
     else:
       print(alert)
@@ -40,7 +41,8 @@ def volume_alerts():
   volume_alert = VolumeAlerts.objects.all()
   for alert in volume_alert:
     data = get_ticker_quote(alert.ticker)
-    if data["regularMarketVolume"].item() == alert.limit:
+    volume = data["regularMarketVolume"].item()
+    if volume == alert.limit:
       print("Volume Alert is being sent ")
     else:
       print(alert)
