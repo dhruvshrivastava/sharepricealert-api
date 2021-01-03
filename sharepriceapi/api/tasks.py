@@ -2,6 +2,8 @@ from celery import shared_task
 from .models import FrequencyAlerts, PercentageAlerts, VolumeAlerts
 import datetime
 from .quotes import get_ticker_quote
+from django.core.mail import send_mail
+from decouple import config 
 
 
 @shared_task
@@ -19,7 +21,14 @@ def frequency_alerts():
       time_after_interval = alert.time_set + datetime.timedelta(minutes=int(alert.interval))
       if now.hour == alert.time_set.hour and now.minute == alert.time_set.minute: 
          data = get_ticker_quote(alert.ticker)
-         print("Frequency Alert is being sent")
+         changePercent = str(data["regularMarketChangePercent"].item())
+         price = str(data["price"].item())
+         volume = str(data["regularMarketVolume"].item())
+         high = str(data["regularMarketDayHigh"].item())
+         low = str(data["regularMarketDayLow"].item())
+         message = 'Price: ' + price + 'Volume:' + volume + 'High: ' + high + 'Low: ' + low
+         send_mail("Frequency Alert", message, config('EMAIL_HOST_USER'), [str(alert.alert_of.email)])
+         print("Frequency Alert sent", alert.ticker)
          FrequencyAlerts.objects.filter(pk=alert.id).update(time_set=time_after_interval)
       else:
           print(now)
@@ -31,8 +40,10 @@ def percentage_alerts():
   for alert in percentage_alert:
     data = get_ticker_quote(alert.ticker)
     changePercent = "{:.2f}".format(data["regularMarketChangePercent"].item())
-    if changePercent == alert.limit:
-      print("Percentage Alert is being sent")
+    if changePercent >= alert.limit:
+      message = 'Your ticker has crossed the limit: ' + str(alert.limit)
+      send_mail("Percentage Alert", message, config('EMAIL_HOST_USER'), [str(alert.alert_of.email)])
+      print("Percentage Alert sent", alert.ticker)
     else:
       print(alert)
 
@@ -42,7 +53,9 @@ def volume_alerts():
   for alert in volume_alert:
     data = get_ticker_quote(alert.ticker)
     volume = data["regularMarketVolume"].item()
-    if volume == alert.limit:
-      print("Volume Alert is being sent ")
+    if volume >= alert.limit:
+      message = 'Your ticker has crossed the limit: ' + str(alert.limit)
+      send_mail("Percentage Alert", message,config('EMAIL_HOST_USER'), [str(alert.alert_of.email)])
+      print("Volume Alert sent ")
     else:
       print(alert)
