@@ -21,5 +21,5 @@ API built on Django Rest Framework and Celery which provides the following funct
 - Run the celery worker in a seperate process: `celery -A sharepricealert worker --loglevel=info`
 - Run the celery scheduler in a seperate process: `celery -A sharepricealert beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler`
 - Go to 127.0.0.1:8000 to access the DRF's built in browsable API to set alerts and add tickers to your watchlist 
-- Go to 127.0.0.1:8000/admin to schedule periodic tasks (sending alerts) using the Admin interface. *Set the interval for 1 minute or less*
+- Go to 127.0.0.1:8000/admin to schedule periodic tasks (sending alerts) using the Admin interface. *Set the interval for 1 minute*
  
