@@ -1,5 +1,5 @@
 from django.db import models
-import datetime
+from django.utils import timezone 
 
 class Ticker(models.Model):
     ticker_name = models.CharField(max_length=100, unique=True)
@@ -11,7 +11,7 @@ class Ticker(models.Model):
 class FrequencyAlerts(models.Model):
     
     alert_of = models.ForeignKey('auth.User', related_name='frequency_alerts', on_delete=models.CASCADE, null=True)
-    time_set = models.DateTimeField(default=datetime.datetime.now())
+    time_set = models.DateTimeField(default=timezone.now())
     ticker = models.CharField(max_length=100, unique=True)
     interval = models.CharField(max_length=100)
     def __str__(self):
@@ -35,7 +35,6 @@ class PercentageAlerts(models.Model):
     def __str__(self):
          template = '{0.ticker} {0.limit}'
          return template.format(self)
-
 
 
 

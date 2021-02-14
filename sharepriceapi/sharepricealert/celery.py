@@ -12,13 +12,12 @@ app = Celery('sharepricealert')
 app.config_from_object('django.conf:settings')
 app.autodiscover_tasks(settings.INSTALLED_APPS)
 
+
 @app.task(bind=True)
 def debug_task(self):
     print(f'Request: {self.request!r}')
 
-@app.on_after_configure.connect
-def setup_periodic_tasks(sender, **kwargs):
-    sender.add_periodic_task(60.0, frequency_alerts())
+
     
 
     

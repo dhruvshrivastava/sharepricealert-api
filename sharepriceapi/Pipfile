@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+celery = "==4.1.1"
+django-celery = "*"
+django-celery-beat = "*"
+djangorestframework = "*"
+djangorestframework-jwt = "*"
+eventlet = "*"
+pandas-datareader = "*"
+python-decouple = "*"
+twilio = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"
