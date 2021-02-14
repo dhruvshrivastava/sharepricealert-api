@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly 
-from .serializers import TickerSerializer, UserSerializer, FrequencySerializer, VolumeSerializer, PercentageSerializer
-from .models import Ticker, FrequencyAlerts, PercentageAlerts, VolumeAlerts
+from .serializers import TickerSerializer, UserSerializer, FrequencySerializer, TriggerSerializer, VolumeSerializer, PercentageSerializer
+from .models import Ticker, FrequencyAlerts, PercentageAlerts, VolumeAlerts, TriggerAlerts
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from .permissions import OnlyOwner
@@ -86,3 +86,18 @@ class PercentageViewset(viewsets.ModelViewSet):
         instance.delete()
 
 
+class TriggerViewset(viewsets.ModelViewSet):
+    queryset = TriggerAlerts.objects.all()
+    serializer_class = TriggerSerializer
+    permission_classes = {IsAuthenticatedOrReadOnly,}
+
+    def perform_create(self, serializer):
+        serializer.save(ticker=self.request.data['ticker'], above_limit = self.request.data['above_limit'], below_limit = self.request.data['below_limit'])
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def perform_destroy(self, instance):
+        instance.delete()

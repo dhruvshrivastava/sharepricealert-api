@@ -1,5 +1,5 @@
 from celery import shared_task 
-from .models import FrequencyAlerts, PercentageAlerts, VolumeAlerts
+from .models import FrequencyAlerts, PercentageAlerts, VolumeAlerts, TriggerAlerts
 from .quotes import get_ticker_quote
 from django.core.mail import send_mail
 from django.utils import timezone
@@ -54,5 +54,21 @@ def volume_alerts():
       message = 'Your ticker has crossed the limit: ' + str(alert.limit)
       send_mail("Percentage Alert", message,config('EMAIL_HOST_USER'), [str(alert.alert_of.email)])
       print("Volume Alert sent ")
+    else:
+      print(alert)
+
+
+@shared_task
+def trigger_alerts():
+  trigger_alert = TriggerAlerts.objects.all()
+  for alert in trigger_alert:
+    data = get_ticker_quote(alert.ticker)
+    price = data["price"].item()
+    blimit = alert.below_limit.replace(",","")
+    alimit = alert.above_limit.replace(",","")
+    if float(price) <= float(blimit) or float(price) >= float(alimit):
+      message = "Alert has been triggered, current price: " + str(price)
+      send_mail("Trigger Alert", message, config('EMAIL_HOST_USER'), [str(alert.alert_of.email)])
+      print("Trigger Alert sent")
     else:
       print(alert)

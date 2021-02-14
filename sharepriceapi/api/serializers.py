@@ -1,5 +1,5 @@
 from rest_framework import serializers 
-from .models import Ticker, FrequencyAlerts, VolumeAlerts, PercentageAlerts
+from .models import Ticker, FrequencyAlerts, VolumeAlerts, PercentageAlerts, TriggerAlerts
 from django.contrib.auth.models import User
 
 class TickerSerializer(serializers.ModelSerializer):
@@ -35,6 +35,11 @@ class PercentageSerializer(serializers.ModelSerializer):
         model = PercentageAlerts
         fields = ['ticker', 'limit', 'alert_of']
 
+class TriggerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TriggerAlerts
+        fields = ['ticker', 'above_limit', 'below_limit',  'alert_of']
 
 
 
