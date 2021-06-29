@@ -47,6 +47,7 @@ class TriggerAlerts(models.Model):
         return template.format(self)
 
 
-
-    
-    
+class TickerList(models.Model):
+    ticker_name = models.CharField(max_length=100, unique=True)
+    def __str__(self):
+        return str(self.ticker_name)

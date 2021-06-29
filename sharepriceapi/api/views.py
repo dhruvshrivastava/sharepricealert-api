@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly 
-from .serializers import TickerSerializer, UserSerializer, FrequencySerializer, TriggerSerializer, VolumeSerializer, PercentageSerializer
-from .models import Ticker, FrequencyAlerts, PercentageAlerts, VolumeAlerts, TriggerAlerts
+from .serializers import TickerListSerializer, TickerSerializer, UserSerializer, FrequencySerializer, TriggerSerializer, VolumeSerializer, PercentageSerializer
+from .models import Ticker, FrequencyAlerts, PercentageAlerts, VolumeAlerts, TriggerAlerts, TickerList
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from .permissions import OnlyOwner
@@ -101,3 +101,9 @@ class TriggerViewset(viewsets.ModelViewSet):
 
     def perform_destroy(self, instance):
         instance.delete()
+
+
+class TickerListViewset(viewsets.ModelViewSet):
+    queryset = TickerList.objects.all()
+    serializer_class = TickerListSerializer
+
