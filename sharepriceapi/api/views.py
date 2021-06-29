@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticatedOrReadOnly 
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from .serializers import TickerListSerializer, TickerSerializer, UserSerializer, FrequencySerializer, TriggerSerializer, VolumeSerializer, PercentageSerializer
 from .models import Ticker, FrequencyAlerts, PercentageAlerts, VolumeAlerts, TriggerAlerts, TickerList
 from django.contrib.auth.models import User
@@ -106,4 +106,5 @@ class TriggerViewset(viewsets.ModelViewSet):
 class TickerListViewset(viewsets.ModelViewSet):
     queryset = TickerList.objects.all()
     serializer_class = TickerListSerializer
+    permission_classes = {AllowAny}
 
